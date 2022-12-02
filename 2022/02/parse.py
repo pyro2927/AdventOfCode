@@ -1,19 +1,20 @@
 # them A, B, C
 # me   X, Y, Z
+# Part 2
+# X Lose
+# Y Draw
+# Z Win
 def round_points(them, me):
-  # X is chr(88)
-  shape_score = ord(me) - 87
+  shift = 0
+  outcome_points = 3
+  if me == 'X':
+    shift = -1
+    outcome_points = 0
+  elif me == 'Z':
+    shift = 1
+    outcome_points = 6
 
-  # draw
-  if ord(them) == ord(me) - 23:
-    return shape_score + 3
-
-  # win
-  if ord(me) - 24 == ord(them) or (me == 'X' and them == 'C'):
-    return 6 + shape_score
-
-  # else, we lost
-  return shape_score
+  return ((ord(them) - 65 + shift) % 3) + 1 + outcome_points
     
 
 
