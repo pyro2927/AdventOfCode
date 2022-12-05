@@ -15,8 +15,10 @@ def parse_cargo_ship_line(line):
 # move 3 from 6 to 2
 def move(instructions):
   _, num, _, f, _, t = instructions.split(" ")
+  temp = []
   for _ in range(int(num)):
-    ships[int(t)-1].append(ships[int(f)-1].pop())
+    temp.insert(0, ships[int(f)-1].pop())
+  ships[int(t)-1].extend(temp)
 
 def parse():
   with open('input.txt', 'r') as file:
