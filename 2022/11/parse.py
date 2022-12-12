@@ -3,6 +3,8 @@ from operator import add, mul, pow
 file = open('input.txt', 'r')
 lines = file.readlines()
 
+RESET = 1
+
 monkeys = []
 
 class Monkey:
@@ -32,15 +34,12 @@ class Monkey:
     self.inspected_count += 1
     item = self.items.pop(0)
     item = self.op_func(item, self.op_val)
-    item = int(item / 3)
+    item = item % RESET # prevent our number from getting too big
     return item, self.truemonkey if item % self.divisor == 0 else self.falsemonkey
 
   # receive an item from another monkey
   def receive(self, item):
     self.items.append(item)
-
-
-
 
 i = 1
 
@@ -48,7 +47,14 @@ while i < len(lines):
   monkeys.append(Monkey(lines[i:i+5]))
   i += 7
 
-for _ in range(20):
+# figure out our new mega-divisor to speed things up
+i = 3
+while i < len(lines):
+  RESET *= int(lines[i].strip().split(" ")[-1])
+  i += 7
+
+for x in range(10000):
+  print(x)
   for m in monkeys:
     while(len(m.items) > 0):
       item, mi = m.inspect_and_throw()
