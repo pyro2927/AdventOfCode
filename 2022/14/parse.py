@@ -47,8 +47,11 @@ def move_down(point):
     if space_open(p):
       return move_down(p)
 
-  # else  
   SAND.append(point)
+
+  # make sure we stop if it goes all the way up
+  if point == START:
+    return False
   return point
 
 # MOAR SAND
@@ -62,8 +65,8 @@ def tick_sand():
 # draw our board
 def draw():
   # TODO: determine better size
-  for y in range(0, 11):
-    for x in range(490, 507):
+  for y in range(0, HEIGHT):
+    for x in range(0, 1000):
       point = (x,y)
       if point == START:
         print("+", end='')
@@ -77,6 +80,9 @@ def draw():
 
 
 parse()
+# Star 2, add our floor
+old_height = HEIGHT + 2
+fill_rock((-1000, old_height), (1500, old_height))
 tick_sand()
 draw()
 print(len(SAND))
