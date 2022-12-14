@@ -1,4 +1,6 @@
 import ast
+import functools
+import operator
 
 file = open('input.txt', 'r')
 lines = file.readlines()
@@ -51,12 +53,26 @@ def compare(left, right):
 
 
 proper_order = []
+all_pairs = []
 for x in range(len(pairs)):
   pair = pairs[x]
   left = pair[0]
   right = pair[1]
+
+  all_pairs.append(left)
+  all_pairs.append(right)
+
   if compare(left, right) == 1:
     proper_order.append(x + 1)
 
 print(proper_order)
 print(sum(proper_order))
+
+divider_packets = [ [[2]], [[6]] ]
+# add our divider packets
+all_pairs.extend(divider_packets)
+
+sorted_pairs = sorted(all_pairs, key=functools.cmp_to_key(compare), reverse=True)
+
+print("Decoder key")
+print(operator.mul(*[ sorted_pairs.index(x) + 1 for x in divider_packets]))
