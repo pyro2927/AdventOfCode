@@ -1,57 +1,49 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"math"
 	"os"
 	"sort"
 	"strings"
 )
 
-func calcNext(seeds []int, lookup map[int]int) []int {
-	newSeeds := []int{}
-	for _, seed := range seeds {
-		val, ok := lookup[seed]
-		if ok {
-			newSeeds = append(newSeeds, val)
-		} else {
-			newSeeds = append(newSeeds, seed)
-		}
-	}
-	return newSeeds
-}
-
-func Min(array []int) int {
-	var min int = array[0]
-	for _, value := range array {
-		if min > value {
-			min = value
-		}
-	}
-	return min
-}
-
 func main() {
-	file, err := os.Open("input.txt")
+	content, err := os.ReadFile("input.txt")
 	if err != nil {
-		log.Fatal(err)
+		//Do something
 	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
+	lines := strings.Split(string(content), "\n")
 
-	score := 0
+	var queue []int
 
-	for scanner.Scan() {
+	for i := 0; i < len(lines); i++ {
+		queue = append(queue, i)
+	}
+
+	fmt.Println(len(queue))
+
+	score := len(lines)
+
+	for len(queue) > 0 {
+		//fmt.Println(len(queue))
+		score++
+		// dequeue
+		next := queue[0]
+		queue = queue[1:]
+
 		count := 0
-		line := scanner.Text()
+
+		// load the correct line
+		line := lines[next]
+
 		all := strings.Split(strings.Split(line, ": ")[1], " | ")
 		winners := strings.Fields(all[0])
 		sort.Strings(winners)
+
 		mine := strings.Fields(all[1])
 		sort.Strings(mine)
+
 		for _, w := range winners {
 			for _, m := range mine {
 				if w == m {
@@ -61,10 +53,15 @@ func main() {
 			}
 		}
 
+		// add our cards
 		if count > 0 {
-			fmt.Printf("Matches: %d\n", count)
-			score += int(math.Pow(2, float64(count-1)))
-			fmt.Printf("Score: %d\n", score)
+			//score += int(math.Pow(2, float64(count-1)))
+
+			// track additional cards
+			//fmt.Printf("Tracking next %d cards\n", count)
+			for i := 1; i <= count; i++ {
+				queue = append(queue, next+i)
+			}
 		}
 	}
 
