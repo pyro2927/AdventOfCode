@@ -1,6 +1,6 @@
 from math import dist, prod
 
-file_path = "test.txt"
+file_path = "input.txt"
 password = 0
 boxes = []
 circuits = [] # nested sets
@@ -18,23 +18,25 @@ for j1 in boxes:
       continue
     distances[dist(j1, j2)] = (j1, j2)
 
-
 sorted_dist = sorted(distances.keys())
-k = 0
+
 count = 0
-while count < 10:
+for k in range(0, 1000):
   j1, j2 = distances[sorted_dist[k]]
   found = []
+  duplicate = False
+
   for c in circuits:
     if j1 in c and j2 in c:
       # we've made a circle
-      count -= 1
+      duplicate = True
       break
-    elif j1 in c or j2 in c: # only one found
+    elif (j1 in c) or (j2 in c): # only one found
       found.append(c)
 
-  count += 1
-  if len(found) == 1:
+  if duplicate:
+    continue
+  elif len(found) == 1:
     found[0].add(j1)
     found[0].add(j2)
   elif len(found) == 0:
@@ -42,6 +44,5 @@ while count < 10:
   elif len(found) == 2: # we need to combine these for tracking
     found[0].update(found[1])
     circuits.remove(found[1])
-  k += 1
 
 print(prod(sorted([len(x) for x in circuits])[-3:]))
